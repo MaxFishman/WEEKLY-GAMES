@@ -449,7 +449,7 @@
       const status = document.getElementById('dodger-status');
 
       const SPAWN_INTERVAL_MS = 700;
-      const SCORE_INTERVAL_MS = 16; // ~62fps cadence for incremental scoring
+      const SCORE_INTERVAL_MS = 16; // ~60fps cadence for incremental scoring
       const player = { x: canvas.width / 2 - 16, y: canvas.height - 40, w: 32, h: 16, speed: 4.5, vx: 0 };
       let obstacles = [];
       let energy = [];
@@ -525,7 +525,6 @@
         });
       }
 
-      const SCORE_INTERVAL_MS = 16; // target ~60fps cadence for incremental scoring
       function update(delta) {
         player.vx = 0;
         if (keys.has('left')) player.vx = -player.speed;
