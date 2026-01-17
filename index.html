@@ -161,7 +161,7 @@
         Open-source and designed for GitHub Pages.</p>
       <div class="hero-actions">
         <a class="button primary" href="#games">Jump to games</a>
-        <a class="button" href="https://threejs.org/" target="_blank" rel="noreferrer noopener">Three.js</a>
+        <a class="button" href="https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API" target="_blank" rel="noreferrer noopener">WebGL docs</a>
         <a class="button" href="https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API" target="_blank" rel="noreferrer noopener">Canvas API</a>
       </div>
     </div>
@@ -451,6 +451,7 @@
       const player = { x: canvas.width / 2 - 16, y: canvas.height - 40, w: 32, h: 16, speed: 4.5, vx: 0 };
       let obstacles = [];
       let energy = [];
+      const SPAWN_INTERVAL_MS = 700;
       let lastSpawn = 0;
       let score = 0;
       let running = false;
@@ -521,7 +522,7 @@
         });
       }
 
-      const SCORE_TICK_MS = 16;
+      const SCORE_INTERVAL_MS = 16; // target ~60fps cadence for incremental scoring
       function update(delta) {
         player.vx = 0;
         if (keys.has('left')) player.vx = -player.speed;
@@ -529,7 +530,7 @@
         player.x = Math.min(canvas.width - player.w, Math.max(0, player.x + player.vx));
 
         lastSpawn += delta;
-        if (lastSpawn > 700) {
+        if (lastSpawn > SPAWN_INTERVAL_MS) {
           spawnObject(obstacles, 'rock');
           if (Math.random() > 0.5) spawnObject(energy, 'energy');
           lastSpawn = 0;
@@ -559,7 +560,7 @@
           return !hit;
         });
 
-        score += Math.floor(delta / SCORE_TICK_MS);
+        score += Math.floor(delta / SCORE_INTERVAL_MS);
         status.textContent = running ? `Status: running · Score: ${score}` : status.textContent;
       }
 
