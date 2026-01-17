@@ -448,14 +448,16 @@
       const resetBtn = document.getElementById('dodger-reset');
       const status = document.getElementById('dodger-status');
 
+      const SPAWN_INTERVAL_MS = 700;
+      const SCORE_INTERVAL_MS = 16; // ~62fps cadence for incremental scoring
       const player = { x: canvas.width / 2 - 16, y: canvas.height - 40, w: 32, h: 16, speed: 4.5, vx: 0 };
       let obstacles = [];
       let energy = [];
-      const SPAWN_INTERVAL_MS = 700;
       let lastSpawn = 0;
       let score = 0;
       let running = false;
       let frameId;
+      let scoreAccumulator = 0;
 
       const keys = new Set();
       document.addEventListener('keydown', (e) => {
@@ -482,6 +484,7 @@
         energy = [];
         score = 0;
         lastSpawn = 0;
+        scoreAccumulator = 0;
         player.x = canvas.width / 2 - 16;
         player.vx = 0;
         status.textContent = 'Status: running · Score: 0';
@@ -560,7 +563,11 @@
           return !hit;
         });
 
-        score += Math.floor(delta / SCORE_INTERVAL_MS);
+        scoreAccumulator += delta;
+        while (scoreAccumulator >= SCORE_INTERVAL_MS) {
+          score += 1;
+          scoreAccumulator -= SCORE_INTERVAL_MS;
+        }
         status.textContent = running ? `Status: running · Score: ${score}` : status.textContent;
       }
 
