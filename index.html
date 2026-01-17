@@ -157,7 +157,7 @@
     <div class="hero">
       <div class="tag">Weekly Games · WebGL + Canvas</div>
       <h1>Arcade built with modern web graphics</h1>
-      <p>Host multiple experiments that mix 3D (Three.js) and 2D (HTML Canvas) playables.
+      <p>Host multiple experiments that mix 3D (WebGL) and 2D (HTML Canvas) playables.
         Open-source and designed for GitHub Pages.</p>
       <div class="hero-actions">
         <a class="button primary" href="#games">Jump to games</a>
@@ -177,7 +177,7 @@
         <div id="orbit-canvas" class="canvas-frame"></div>
         <div class="controls">
           <button class="button primary" id="orbit-toggle">Start</button>
-          <button class="button" id="orbit-reset">Reset view</button>
+          <button class="button" id="orbit-reset">Restart</button>
         </div>
         <div class="status" id="orbit-status">Status: stopped</div>
         <ul class="list">
@@ -262,6 +262,7 @@
       gl.linkProgram(program);
       gl.useProgram(program);
 
+      // Vertex positions grouped per face (front, back, top, bottom, right, left)
       const positions = new Float32Array([
         // Front
         -1, -1,  1,  1, -1,  1,  1,  1,  1,  -1,  1,  1,
@@ -432,7 +433,10 @@
       }
 
       toggleBtn.addEventListener('click', () => setRunning(!running));
-      resetBtn.addEventListener('click', () => setRunning(true));
+      resetBtn.addEventListener('click', () => {
+        start = performance.now();
+        setRunning(true);
+      });
       setRunning(true);
     })();
 
@@ -517,6 +521,7 @@
         });
       }
 
+      const SCORE_TICK_MS = 16;
       function update(delta) {
         player.vx = 0;
         if (keys.has('left')) player.vx = -player.speed;
@@ -554,7 +559,7 @@
           return !hit;
         });
 
-        score += Math.floor(delta / 16);
+        score += Math.floor(delta / SCORE_TICK_MS);
         status.textContent = running ? `Status: running · Score: ${score}` : status.textContent;
       }
 
